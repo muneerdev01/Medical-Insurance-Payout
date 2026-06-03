@@ -38,9 +38,23 @@ def load_insurance_data():
             'charges': np.random.normal(13270, 12000, n_samples).clip(1000, 64000)
         })
 
+# Load dataset
 df = load_insurance_data()
 
-# 3. Sidebar Controls (Real-Time Filters)
+# Clean column headers immediately to avoid key errors from trailing spaces or capitalization
+df.columns = df.columns.str.lower().str.strip()
+
+# 3. Defensive Validation Engine
+required_columns = ['age', 'sex', 'bmi', 'children', 'smoker', 'region', 'charges']
+missing_columns = [col for col in required_columns if col not in df.columns]
+
+if missing_columns:
+    st.error(f"❌ **Data Schema Error:** Missing required columns: `{missing_columns}`")
+    st.write("🕵️‍♂️ **Available columns detected in dataset:**", df.columns.tolist())
+    st.info("Please adjust your `expenses.csv` column headers to match the expected schema.")
+    st.stop()
+
+# 4. Sidebar Controls (Real-Time Filters)
 st.sidebar.title("📊 Filter Engine")
 selected_regions = st.sidebar.multiselect("Region", options=df['region'].unique(), default=df['region'].unique())
 selected_smokers = st.sidebar.multiselect("Smoker Status", options=df['smoker'].unique(), default=df['smoker'].unique())
@@ -53,12 +67,12 @@ df_filtered = df[
     (df['sex'].isin(selected_genders))
 ]
 
-# 4. Main Application Header
+# 5. Main Application Header
 st.title("Medical Insurance Payout Business Intelligence Dashboard")
 st.markdown("Operational Risk Management and Actuarial Analysis Matrix.")
 st.markdown("---")
 
-# 5. Core Operational KPIs
+# 6. Core Operational KPIs
 kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 with kpi1:
     st.markdown(f'<div class="kpi-box"><h5>Total Enrolled</h5><h3>{len(df_filtered):,}</h3></div>', unsafe_allow_html=True)
@@ -72,7 +86,7 @@ with kpi4:
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# 6. Tabular Sub-Layout System
+# 7. Tabular Sub-Layout System
 tab_main, tab_charts, tab_ml = st.tabs(["📋 Fleet Analysis", "📉 Interactive Plots", "🧬 Risk Drivers (ML)"])
 
 with tab_main:
@@ -147,7 +161,6 @@ with tab_ml:
 
     with col_inf2:
         st.markdown("#### 🧬 Age Group Risk Vector")
-        # --- FIXED LINE HERE (No open brackets, zero compilation risks) ---
         young_avg = df_filtered[df_filtered['age'] < 35]['charges'].mean() if (df_filtered['age'] < 35).sum() > 0 else 0
         old_avg = df_filtered[df_filtered['age'] >= 55]['charges'].mean() if (df_filtered['age'] >= 55).sum() > 0 else 0
         
