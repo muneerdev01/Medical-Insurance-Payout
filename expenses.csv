@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 age,sex,bmi,children,smoker,region,charges
 19,female,27.9,0,yes,southwest,16884.924
 18,male,33.77,1,no,southeast,1725.5523
@@ -2678,4 +2677,4 @@ age,sex,bmi,children,smoker,region,charges
 18,female,36.85,0,no,southeast,1629.8335
 21,female,25.8,0,no,southwest,2007.945
 61,female,29.07,0,yes,northwest,29141.3603
->>>>>>> a3fcd00af13bbb57c147da8b56385fe74459831d
+
